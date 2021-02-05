@@ -12,10 +12,6 @@ class YelpClassifier(object):
         self.LIKELIHOODS = {} # word -> P(word | num_stars)
         self.PRIORS = {} # num_stars -> P(num_stars)
 
-    ######################################################
-    ################# DRIVER FUNCTIONS ##################
-    ######################################################
-
     def train(self, train_rdd):
         self.NUM_REVIEWS, self.NUM_WORDS = self.calculate_num_reviews_and_words_per_num_stars(train_rdd)
         self.PRIORS = self.calculate_priors()
@@ -26,13 +22,6 @@ class YelpClassifier(object):
         predictedReviews = predictions.collect()
         return predictedReviews
 
-    ######################################################
-    ################# PYSPARK FUNCTIONS ##################
-    ######################################################
-
-    ################################# 
-    #           FILL THIS IN        #
-    #################################
     # Given the reviews in train_rdd, calculates P(word | num_stars) for every word found in a review,
     # i.e. the likelihood of a word in a review given the number of stars that review received.
     # The likelihood is calculated as, across all of the reviews given NUM_STARS:
@@ -56,9 +45,6 @@ class YelpClassifier(object):
             LIKELIHOODS[int(num_stars)] = likelihood
         return LIKELIHOODS
 
-    ################################# 
-    #           FILL THIS IN        #
-    #################################
     # Calculate number of reviews per number of stars
     def calculate_num_reviews_and_words_per_num_stars(self, train_rdd):
         # Transformations:
@@ -124,9 +110,7 @@ class YelpClassifier(object):
 
     # ____________calculate_likelihoods() helpers________ #
 
-    ################################# 
-    #           FILL THIS IN        #
-    #################################
+    
     # Maps the words in a review to pairs of that word, the number of stars
     # of the review that the word was in, and the count of that word.
     # Review is of the format (review_id, num_stars, review_text_as_string)
@@ -140,11 +124,6 @@ class YelpClassifier(object):
             retArr.append(((review[1], i), 1))
         return retArr
 
-
-        
-    ################################# 
-    #           FILL THIS IN        #
-    #################################
     # Adds two review counts together
     @staticmethod
     def add_review_counts(count1, count2):
@@ -156,10 +135,7 @@ class YelpClassifier(object):
     def compute_likelihood(self, count_of_word, num_stars):
         probability = float((count_of_word + 1)) / float((self.NUM_WORDS[num_stars] + 1))
         return probability
-
-    ################################# 
-    #           FILL THIS IN        #
-    #################################    
+    
     # Maps the count of a word, over reviews of the same number of stars,
     # to its likelihood: P(WORD | NUM_STARS) = count of WORD / count of ALL words in reviews with NUM_STARS
     # 3. [((num_stars, word_in_review), num_reviews_with_word_and_stars)] --> [(num_stars, {word : probability_in_review_of_num_stars})]
@@ -179,9 +155,7 @@ class YelpClassifier(object):
 
     # ____________calculate_num_reviews_per_num_stars() helpers________ #
 
-    ################################# 
-    #           FILL THIS IN        #
-    #################################
+
     # Converts a review into a pair of its number of stars with the
     # number of words in the review and the number of reviews it represents
     # 1. (review_id, num_stars, review_text_as_string) --> [(num_stars, (1, num_words))]
@@ -192,9 +166,6 @@ class YelpClassifier(object):
         length = len(words)
         return [(review[1],(1, length))]
 
-    ################################# 
-    #           FILL THIS IN        #
-    ################################# 
     # Combines the values of two pairs outputted by review_to_num_stars_num_words
     # 2. [(num_stars, (1, num_words))] --> [(num_stars, (num_reviews_of_num_stars, num_words_total_of_num_stars))]
     @staticmethod
@@ -268,9 +239,6 @@ class YelpClassifier(object):
         
         return (review_id, (num_stars, posterior))
 
-    ################################# 
-    #           FILL THIS IN        #
-    #################################
     # Returns the max of two posterior probabilities as well as the number of stars
     # rating the corresponds to the greater posterior probability
     @staticmethod
